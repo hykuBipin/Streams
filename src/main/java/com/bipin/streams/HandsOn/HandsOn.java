@@ -15,6 +15,24 @@ import java.util.stream.Stream;
 //Find the kth smallest element in an array using Java streams:
 //Given a list of strings, find the frequency of each word using Java streams:
 //Implement a method to partition a list into two groups based on a predicate using Java streams:
+
+//********* EMPLOYEE **********
+//Find list of employees whose name starts with alphabet A
+//Group The employees By Department Names
+//Find the total count of employees using stream
+//Find the max age of employees
+//Find all department names
+//Find the count of employee in each department
+//Find the list of employees whose age is less than 30
+//Find the list of employees whose age is in between 26 and 31
+//Find the average age of male and female employee
+//Find the department who is having maximum number of employee
+//Find the Employee who stays in Chennai and sort them by their names
+//Find the average salary in all departments
+//Find the highest salary in each department
+//Find the list of employee and sort them by their salary
+//Find the employee who has second highest salary
+
 public class HandsOn {
     public static void main(String[] args)
     {
@@ -107,6 +125,111 @@ public class HandsOn {
         List<Integer> odd = partition.get(false);
         System.out.println(even);
         System.out.println(odd);
+
+        //******************* employee **************
+        List<Employee> employees = Arrays.asList(
+                new Employee(1, "Bipin", 29, "IT", "Mumbai", 20000, "Male"),
+                new Employee(2, "Mary", 27, "Sales", "Chennai", 25000, "Female"),
+                new Employee(3, "Alex Joe", 28, "IT", "Chennai", 22000, "Male"),
+                new Employee(4, "John", 29, "Sales", "Gurgaon", 29000, "Male"),
+                new Employee(5, "Liza", 25, "Sales", "Bangalore", 32000, "Female"),
+                new Employee(6, "Peter", 27, "Admin", "Mumbai", 31500, "Male"),
+                new Employee(7, "Harry", 30, "Research", "Kochi", 21000, "Male")
+        );
+
+        //Find list of employees whose name starts with alphabet A
+        List<Employee> employees1 = employees.stream()
+                .filter(emp -> emp.getName().startsWith("A"))
+                .collect(Collectors.toList());
+        System.out.println(employees1);
+
+        //Group The employees By Department Names
+        Map<String, List<Employee>> employees2 = employees.stream()
+                .collect(Collectors.groupingBy(Employee::getDepartment));
+        System.out.println(employees2);
+
+        //Find the total count of employees using stream
+        long employees3 = employees.stream()
+                .count();
+        System.out.println(employees3);
+
+        //Find the max age of employees
+        Optional<Employee> employees4 = employees.stream()
+                .max(Comparator.comparingInt(Employee::getAge));
+        System.out.println(employees4);
+
+        int age = employees.stream().mapToInt(Employee::getAge).max().getAsInt();
+        System.out.println("Maximum age of employee "+ age);
+
+        //Find all department names
+        List<String> employees5 = employees.stream()
+                .map(Employee::getDepartment)
+                .distinct()
+                .collect(Collectors.toList());
+        System.out.println(employees5);
+
+        //Find the count of employee in each department
+        Map<String, Long> employees6 = employees.stream()
+                .collect(Collectors.groupingBy(Employee::getDepartment,Collectors.counting()));
+        System.out.println(employees6);
+
+        //Find the list of employees whose age is less than 30
+        List<Employee> employees7 = employees.stream()
+                .filter(emp -> emp.getAge() < 30)
+                .collect(Collectors.toList());
+        System.out.println(employees7);
+
+        //Find the list of employees whose age is in between 26 and 31
+        List<Employee> employees8 = employees.stream()
+                .filter(emp -> emp.getAge() <= 31 && emp.getAge() > 26)
+                .collect(Collectors.toList());
+        System.out.println(employees8);
+
+        //Find the average age of male and female employee
+        Map<String,Double> employees9 = employees.stream()
+                .collect(Collectors.groupingBy(Employee::getGender,LinkedHashMap::new, Collectors.averagingInt(Employee::getAge)));
+        System.out.println(employees9);
+
+        //Find the department who is having maximum number of employee
+        Map.Entry<String, Long> employeesA = employees.stream()
+                .collect(Collectors.groupingBy(Employee::getDepartment,Collectors.counting()))
+                        .entrySet()
+                                .stream()
+                                        .max(Map.Entry.comparingByValue())
+                                                .get();
+        System.out.println(employeesA);
+
+        //Find the Employee who stays in Chennai and sort them by their names
+        List<Employee> employeesB = employees.stream()
+                .filter(emp -> emp.getCity().equalsIgnoreCase("Chennai"))
+                .sorted(Comparator.comparing(Employee::getName))
+                .collect(Collectors.toList());
+        System.out.println(employeesB);
+
+        //Find the average salary in all departments
+        Map<String, Double> employeesC = employees.stream()
+                .collect(Collectors.groupingBy(emp -> emp.getDepartment(),Collectors.averagingDouble(Employee::getSalary)));
+        System.out.println(employeesC);
+        
+        //Find the highest salary in each department
+        Map<String, Optional<Employee>> employeesD = employees.stream()
+                .collect(Collectors.groupingBy(Employee::getDepartment,Collectors.maxBy(Comparator.comparingDouble(Employee::getSalary))));
+        System.out.println(employeesD);
+
+        //Find the list of employee and sort them by their salary
+        List<Employee> employeesE = employees.stream()
+                .sorted(Comparator.comparingDouble(Employee::getSalary))
+                .collect(Collectors.toList());
+        System.out.println(employeesE);
+
+        //Find the employee who has second highest salary
+        int k1=2;
+        Employee employeesF = employees.stream()
+                .sorted(Comparator.comparingDouble(Employee::getSalary).reversed())
+                .skip(k1-1)
+                .findFirst()
+                .get();
+        System.out.println(employeesF);
 
     }
 
