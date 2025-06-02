@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 //How to convert a List of objects into a Map by considering duplicated keys and store them in sorted order
+//How to check if list is empty in Java 8 using Optional, if not null iterate through the list and print the object?
 public class ListToObjDupkey {
     public static void main(String[] args)
     {
@@ -24,5 +25,11 @@ public class ListToObjDupkey {
                         LinkedHashMap::new
                 ));
         System.out.println(noteLstTemp);
+
+      Optional.ofNullable(noteLst)
+              .orElseGet(Collections::emptyList)
+              .stream().filter(Objects::nonNull)
+              .map(Notes::getTagName)
+              .forEach(System.out::println);
     }
 }
